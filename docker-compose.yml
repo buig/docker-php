@@ -1,0 +1,33 @@
+version: '2'
+services:
+  web:
+    build: .
+    container_name: php-app
+    volumes:
+      - .:/code
+      - /app-vendor
+      - /app-var
+    networks:
+      - edu-shared
+    tty: true
+
+  mysql:
+    image: mysql:5.7
+    container_name: ${MYSQL_HOST}
+    env_file:
+      - .env
+    environment:
+      - MYSQL_DATABASE=${MYSQL_DATABASE}
+      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
+      - MYSQL_USER=${MYSQL_USER}
+      - MYSQL_PASSWORD=${MYSQL_PASSWORD}
+    ports:
+      - 30003:3306
+    volumes: 
+      - ./data/db/mysql:/var/lib/mysql
+    networks:
+      - edu-shared
+
+networks:
+  edu-shared:
+    external: true
